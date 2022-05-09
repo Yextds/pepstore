@@ -652,7 +652,7 @@ export function paginate(
     const pages = pagesLinks.pages;
     const totalPages = pagesLinks.totalPages;
     const currentPage = pagesLinks.currentPage;
-
+     if(pages.length>1){
     var pagehtml="<div class=flex-inline>";
     pagehtml+="<ul class='pagination  relative z-0 inline-flex rounded-md shadow-sm -space-x-px'>";
 
@@ -680,7 +680,11 @@ export function paginate(
     }
     
     pagehtml+="</ul></div>";
-
+     }
+  else{
+    pagehtml ="";
+  }
+  
     $(".custom-pagination-links").empty();
     $('.custom-pagination-links').append(pagehtml);
   }
