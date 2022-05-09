@@ -455,7 +455,7 @@ export function getNearestLocationsByString() {
     
     // Uncommon below to limit the number of results to display from the API request
     request_url += "&limit=" + limit;
-    getRequest(request_url, queryString,);
+    getRequest(request_url, queryString,true);
   }
   var url = window.location.href;  
   var myStorage = window.sessionStorage;
