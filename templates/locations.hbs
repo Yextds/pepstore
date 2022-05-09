@@ -367,8 +367,13 @@
     }
     return time.join(''); // return adjusted time or original string
   }
+  function offset1(offset){
+    let newoffset=offset;
+    getopentimeonmap(newoffset);
+  }
 
-  function getopentimeonmap() {
+  function getopentimeonmap(offset=204) {
+    console.log(offset);
     var baseURL = "https://liveapi-sandbox.yext.com/v2/accounts/me/entities?";
     var api_key = "b262ae7768eec3bfa53bfca6d48e4000";
     var vparam = "20181017";
@@ -388,17 +393,18 @@
       "&limit=" +
       50 +
       "&offset=" +
-      200;
+      offset;
 
     fetch(fullURL).then(response => response.json()).then(result => {
 
 
       if (!result.errors) {
         if (result.response.count > 0) {
+         if(result.response.entities.find((entity) => entity.slug === '{{slug}}')){
           $.each(result.response.entities, function (index, entity) {
             const parsedOffset = parseTimeZoneUtcOffset(entity.timeZoneUtcOffset);
             if ("{{slug}}" == entity.slug) {
-              console.log(entity.name);
+              //console.log(entity.name);
               $('.open-time').append('<strong>' + window.getOpenNowString(entity.hours, parsedOffset) + '</strong>');
               $('.open-time').append('<br><button class="seetime">see store hours</button><div class="store-time"></div>');
             }
@@ -435,48 +441,19 @@
                   html += '</div>';
                   html += "</div>";
                 });
+
                     $('.store-time').append(html);
 
             }
-              }
-                
-              
-              // var html = " ";
-
-              // if ("{{slug}}" == entity.slug) {
-              //   $.each(entity.hours, function (indexh, hour) {
-              //     console.log(hour);
-              //     // console.log(indexh);
-              //     html += '<div class="storelocation-openCloseTime">';
-              //     html += '<ul>';
-              //     html += '<li><strong>';
-              //     html += indexh.toString().slice(0, 3);
-              //     html += ' &nbsp</strong><strong> : </strong>&nbsp';
-
-              //     if (hour.openIntervals) {
-              //       $.each(hour.openIntervals, function (op, openInterval) {
-              //         // console.log(openInterval);
-              //         html += ' &nbsp' + tConvert(openInterval.start) + '&nbsp to &nbsp' + tConvert(openInterval.end);
-              //       });
-              //     } else {
-              //       html += 'Closed';
-              //     }
-
-              //     html += '</li>';
-              //     html += '</ul>';
-              //     html += '</div>';
-              //     html += "</div>";
-              //   });
-              // }
-
-
-              // $('.store-time').append(html);
-
-            })
-
+          }
+              })
           })
         }
-
+        else{
+          var offset=254;
+          offset1(offset);
+        }
+        }
       }
     })
   }
