@@ -1,0 +1,330 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+/* Header Styline */
+
+.topnav #myLinks {
+  display: none;
+}
+.headerLink {
+  @apply font-semibold;
+}
+
+/* Map Styling */
+.error-text {
+  padding-bottom: 10px;
+  color: red;
+}
+
+#map {
+  background-color: #e9ecef;
+  flex-grow: 1;
+  width: 100%;
+}
+.search-center {
+  margin-top: 1rem;
+}
+
+.directions {
+  margin-bottom: 0.5rem;
+  display: flex;
+  justify-content: space-between;
+}
+
+.header-section {
+  padding: 1rem;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.result {
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid #e9ecef;
+  display: flex;
+  justify-content: space-between;
+}
+.right-column {
+  display: flex;
+  align-items: center;
+}
+
+.center-column {
+  flex-grow: 1;
+}
+
+.name {
+  font-weight: bold;
+}
+
+.left-column {
+  width: 2em;
+}
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  @apply bg-gray-50;
+  width: 700px;
+  overflow: hidden;
+}
+
+.result-list {
+  overflow-x: hidden;
+}
+
+.search-bar {
+  display: flex;
+}
+
+.search-location-arrow{
+  cursor: pointer;
+}
+
+.search-bar-icon {
+  cursor: pointer;
+}
+
+.search {
+  margin-left: 0.5rem;
+}
+
+.header {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.full-width-locator {
+  width: 100%;
+  display: flex;
+}
+
+.spinner {
+  margin: 2rem 0;
+  min-height: 40px;
+}
+
+.form label {
+  @apply text-sm mt-4 block mb-1;
+}
+
+.form input {
+  @apply border border-ll-blue w-full block py-1 px-2;
+}
+
+.form select {
+  @apply border border-ll-blue w-full block py-1 px-2;
+}
+
+/* Body Styling */
+
+body {
+  @apply bg-gray-50 text-[#333];
+}
+
+h1 {
+  @apply text-3xl font-bold;
+}
+
+h2 {
+  @apply text-2xl font-bold;
+}
+
+h3 {
+  @apply text-lg font-bold;
+}
+
+h4 {
+  @apply text-lg font-bold;
+}
+
+.hero {
+  background:url(images/luxurystore.jpeg);
+  background-position: center;
+}
+
+.centered-container {
+  @apply mx-auto px-5 md:px-14 max-w-screen-xl;
+}
+
+.skeleton {
+  @apply bg-gray-300 animate-pulse rounded-sm;
+}
+
+h2.section-header {
+  @apply border-b pb-2 mb-3;
+}
+
+.section {
+  @apply mt-8 mb-16;
+}
+
+.btn {
+  @apply border px-4 py-2 rounded transform hover:-translate-y-1 ease-in-out transition-all cursor-pointer hover:shadow-lg  text-center focus:outline-none flex gap-2 items-center justify-center;
+}
+
+
+.btn-primary {
+  @apply bg-ll-red text-white border-ll-red focus:ring-2 focus:bg-red-900;
+}
+
+.btn-secondary {
+  @apply text-ll-red border-ll-red hover:bg-white focus:ring-2 focus:ring-ll-red focus:bg-red-100;
+}
+
+.btn-link {
+  @apply hover:bg-gray-100 focus:ring-2 focus:bg-gray-100;
+}
+
+.error-text {
+  padding-bottom: 10px;
+  color: red;
+}
+
+.site-header{
+  @apply bg-[#1280ff] py-3 px-4 mb-0;
+}
+
+.logo{
+  @apply inline-block align-middle;
+}
+.logo svg{
+  @apply w-32 h-10;
+}
+ul.nav{
+  @apply flex flex-row w-full justify-center mt-3;
+}
+ul.nav a{
+  @apply text-white text-[17px] px-[15px] xl:px-[26px] py-2 inline-block align-middle font-semibold;
+}
+
+.breadcrumb ul li a{
+  @apply inline-block align-middle py-3 after:content-['/'] after:mx-1;
+}
+.address-block{
+  @apply block shadow-md p-5 -mt-8 md:-mt-16 bg-white;
+}
+.address-block .map-block{
+  @apply h-[150px] mb-5;
+}
+
+.address-block .map-block img{
+  @apply h-[150px] object-cover; 
+}
+
+.address-block .btn{
+  @apply mt-2 w-full inline-block px-2 py-2.5 bg-blue-600 text-white font-medium text-xs leading-normal uppercase rounded hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out;
+}
+
+.address-info{
+  @apply relative pl-7 mb-2;
+}
+.address-info .icon{
+  @apply absolute top-1 left-0 w-4;
+}
+.address-info strong{
+  @apply block;
+}
+.address-info.open-time br{
+  @apply hidden;
+} 
+.address-info.open-time .seetime{
+  @apply after:content-[''] after:w-2 after:h-2 after:border-b after:border-r after:inline-block after:border-black after:transform after:rotate-45 after:ml-2 after:relative after:-top-[2px];
+}
+.storelocation-openCloseTime{
+  @apply my-1;
+}
+.storelocation-openCloseTime strong{
+  @apply inline-block;
+}
+.storelocation-openCloseTime strong:first-child{
+  @apply w-10 capitalize;
+}
+
+.sec-heading{
+  @apply pt-16 md:pt-24 text-2xl text-blue-600 font-semibold mb-3;
+}
+
+.slide-c{
+  @apply !relative text-sm;
+}
+.slide-c.translate-x-full{
+  @apply hidden;
+}
+
+.slide-c .btn{
+  @apply mt-2 w-auto inline-block px-3 py-2.5 bg-blue-600 text-white font-medium text-xs leading-normal uppercase rounded hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out;
+}
+.slide-c h5{
+  @apply text-xl text-blue-600 font-semibold mb-2;
+}
+.slider-dots button, .slider-dots button:hover{
+  @apply bg-[#ffda00] mx-1;
+}
+.slider-dots button[aria-current="true"]{
+  @apply bg-blue-600;
+}
+
+.accordion-sec .accordion-btn{
+  @apply flex flex-row w-full bg-transparent text-base font-semibold text-black my-3;
+}
+.accordion-sec .accordion-btn svg{
+  @apply ml-auto fill-blue-600;
+}
+
+.nearby-store{
+  @apply bg-blue-600 mt-24 mb-0
+}
+.address-cta-column{
+  @apply text-sm;
+}
+.address-cta-column .name{
+  @apply text-sm font-semibold text-blue-600 mb-3;
+}
+
+.find-btn .btn{
+  @apply mt-2 w-auto inline-block px-3 py-2.5 bg-[#ffda00] text-blue-600 font-medium text-xs leading-normal uppercase rounded focus:bg-[#ffda00] transition duration-150 ease-in-out border-none;  
+}
+footer ul li{
+  @apply mb-2
+}
+footer ul li a{
+  @apply font-semibold text-[#7c7c7c];
+}
+footer ul li ul {
+  @apply mb-5;
+}
+footer ul li ul li{
+  @apply mb-0;
+}
+footer ul li ul li a{
+  @apply font-normal text-[#a7a7a7];
+}
+
+.social-link a{
+  @apply w-8 h-8 inline-block align-middle bg-blue-600 text-white rounded-full text-center mr-2 mb-2;
+}
+.social-link a svg{
+  @apply align-middle mx-auto mt-[6px] w-4;
+}
+
+.shop-sec{
+  @apply bg-blue-600 pt-5;
+}
+.promo-img{
+  @apply bg-white pb-[56%] inline-block w-full relative align-middle;
+}
+.prmo-content{
+  @apply bg-white p-4 text-sm mt-[3px];
+}
+.prmo-content h4{
+  @apply text-base font-semibold mb-2;
+}
+.prmo-content .btn{
+  @apply mt-2 w-auto inline-block px-3 py-2.5 bg-blue-600 text-white font-medium text-xs leading-normal uppercase rounded focus:bg-[#ffda00] transition duration-150 ease-in-out border-none mt-3; 
+}
+.active.page-btn{
+  @apply !bg-black;
+}

@@ -1,0 +1,18 @@
+{{!-- Please validate any customizations with Schema validator! (https://validator.schema.org/) --}}
+<script type="application/ld+json" class="yext-schema-json" data-yext-id="{{id}}">
+{
+  "@context": "https://schema.org",
+  "@id": "{{id}}",
+  "@type": ["Location"],
+  "name": "{{name}}",
+  "telephone": "{{mainPhone}}",
+  "geo": {{>schemaHelpers-geo geocodedCoordinate}},
+  "paymentAccepted": [{{>schemaHelpers-primitiveArray c_paymentMenthod}}],
+  "openingHoursSpecification": [
+    {{>schemaHelpers-hours hours}}
+  ],
+  "makesOffer": [
+    {{>schemaHelpers-offers services}}
+  ]
+}
+</script>

@@ -1,0 +1,71 @@
+---
+{
+    "urlFormat" : "index.html"
+}
+---
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        {{>head }}
+        <title>Store Locator</title>
+        <link rel="shortcut icon" type="image/jpg" href="/images/yext-favicon.png"/>
+        <script>
+                console.log("defining initMaps Functions");
+                var initMapsFunctions = [];
+                var initMaps = function(noKey) {
+                    for (i = 0; i < initMapsFunctions.length; i++) {
+                        initMapsFunctions[i](noKey);
+                    }
+                }
+        </script>
+           <script src="js/jquery.twbsPagination.js" type="text/javascript"></script>
+    <script src="js/jquery.simplePagination.js" type="text/javascript"></script>
+        <script>
+         // console.log(twbsPagination);
+            function loadScriptAsync(url) {
+                return new Promise((resolve, reject) => {
+                    const script = document.createElement("script");
+                    script.type = 'text/javascript';
+                    script.async = true;
+                    script.defer = true;
+                    script.onload = resolve;
+                    script.onerror = reject;
+                    script.src = url;
+                    document.head.appendChild(script);
+                });
+            }
+            window.mapsLoader = loadScriptAsync("https://maps.googleapis.com/maps/api/js?key=&callback=initMaps&libraries=places");
+        </script>
+    </head>
+    <body>
+        <div class="flex min-h-screen w-full">
+            <div class="w-full">
+                {{>pep_nav}}
+                {{!-- <div class="centered-container"> --}}
+                <div class="centered-container">
+                    {{!-- <style>
+                        .c-address-country-name.c-address-country-US {
+                           display: none;
+                        }
+                        .lp-param-results.lp-subparam-getDirectionsLabel {
+                            font-weight: bold;
+                        }
+                        .gm-control-active.gm-fullscreen-control {
+                            display: none;
+                        }
+                    </style> --}}
+                    {{>locator}}
+                </div>
+                <div class="w-full bg-gray-100">
+                    <div class="centered-container">
+                        {{>footer}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/twbs-pagination/1.4.1/jquery.twbsPagination.js"></script>
+</html>
+

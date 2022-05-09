@@ -1,0 +1,18 @@
+<div class="flex flex-col">
+    <div class='address address-info'>
+        <a id="address" class="hover:underline" href="https://www.google.com/maps/dir/?api=1&destination={{address.line1}} {{address.city}} {{address.region}} {{address.postalCode}}" target="_blank">
+            <img class="icon" src="images/address.svg">
+            <div>{{address.line1}}</div>
+            <div>{{address.line2}}</div>
+            <div>{{address.city}}, {{address.region}} {{address.postalCode}}</div>
+            <div>{{address.countryCode}}</div>
+        </a>
+    </div>
+    <div class="phone address-info">
+        <img class="icon" src="images/phone.svg"> {{phoneNumber "US" mainPhone "NATIONAL"}}
+    </div>
+    <div class="open-time address-info">
+        <img class="icon" src="images/time.svg"> 
+    </div>
+</div>
+

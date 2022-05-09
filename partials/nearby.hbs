@@ -1,0 +1,281 @@
+<div class="py-10">
+  <h2 class="sec-heading text-center !text-white !pt-0 mb-8">Nearby Stores</h2>
+  <div class="location-data grid gap-x-0 gap-y-4 sm:px-10 md:px-0 md:grid-cols-3 md:gap-x-4 lg:gap-x-8"> </div>
+  <div class="find-btn text-center mt-4"><a class="btn" href="#">Find a PEP</a></div>
+  {{!-- <div class="location-data justify-start grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8"> </div> --}}
+
+</div>
+
+
+<script>
+    window.dayName = function(currentDate) {
+      return days[currentDate.getDay()];
+    };
+    window.formatDate = function(intervalStamp, addDays) {
+      let baseDate = new Date();
+      let hours = intervalStamp / 100;
+      let minutes = intervalStamp % 100;
+      baseDate.setHours(hours);
+      baseDate.setMinutes(minutes);
+      const options = {hour: '2-digit', minute:'2-digit'};
+      if (addDays != undefined) {
+        options.weekday = "short";
+        baseDate.setDate(baseDate.getDate() + addDays);
+      }
+      return baseDate.toLocaleTimeString([], options);
+    };
+    window.getYextTimeWithUtcOffset = function(entityUtcOffsetSeconds) {
+      const now = new Date();
+      let utcOffset = 0;
+      if (entityUtcOffsetSeconds) {
+        utcOffset = entityUtcOffsetSeconds * 1000;
+      }
+      if (utcOffset !== 0) {
+        const localUtcOffset = now.getTimezoneOffset() * 60 * 1000;
+        return new Date(now.valueOf() + utcOffset + localUtcOffset);
+      }
+      return now;
+    };
+    window.parseTimeZoneUtcOffset = function(timeString) {
+      if (!timeString) {
+        return 0;
+      }
+      const parts = timeString.split(":");
+      const hours = parseInt(parts[0].replace(/\u200E/g, ''), 10);
+      const minutes = parseInt(parts[1].replace(/\u200E/g, ''), 10);
+      if (hours < 0) {
+        return -(Math.abs(hours) + minutes / 60) * 60 * 60;
+      }
+      return (hours + minutes / 60) * 60 * 60;
+    };
+  window.dateStringToInt = function(dateString) {
+      return parseInt(dateString.replace(":",""))
+    };
+    window.getOpenNowString = function(hoursData, utcOffset) {
+      if (!hoursData) {
+        return ""
+        }
+      const now = getYextTimeWithUtcOffset(utcOffset);
+      const tomorrow = new Date(now.getTime() + 60 * 60 * 24 * 1000);
+      const yesterday = new Date(now.getTime() - 60 * 60 * 24 * 1000);
+      const nowTimeNumber = now.getHours() + now.getMinutes()/60;
+      function getIntervalOnDate(date) {
+        const day = date.getDate();
+        const month = date.getMonth() + 1;
+        const year = date.getFullYear();
+        const days = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
+        const dateString = year + '-' + (month < 10 ? '0' + month : month) + '-' + (day < 10 ? '0' + day : day);
+        const dayOfWeekString = days[date.getDay()];
+        // Check for holiday
+        if (hoursData.holidayHours) {
+          for (let i = 0; i < hoursData.holidayHours.length; i++) {
+            const holiday = hoursData.holidayHours[i];
+            if (holiday.date == dateString) {
+              if (holiday.openIntervals) {
+                return holiday.openIntervals;
+              } else if (holiday.isClosed === true) {
+                return null; // On holiday but closed
+              }
+            }
+          }
+        }
+        // Not on holiday
+        if (hoursData[dayOfWeekString] && hoursData[dayOfWeekString].openIntervals) {
+          return hoursData[dayOfWeekString].openIntervals;
+        } else {
+          return null;
+        }
+      }
+      function timeStringToNumber(timeString) {
+        const parts = timeString.split(":");
+        const hours = parseInt(parts[0].replace(/\u200E/g, ''),10);
+        const minutes = parseInt(parts[1].replace(/\u200E/g, ''),10);
+        return hours + minutes / 60;
+      }
+      function formatTime(time) {
+        const tempDate = new Date("January 1, 2020 " + time)
+        const localeString = 'en-US';
+        const tempTime = tempDate.toLocaleTimeString(localeString.replace('_', '-'), { hour: "numeric", minute: "numeric" });
+        return tempTime;
+      }
+      const intervalsToday = getIntervalOnDate(now);
+      const intervalsTomorrow = getIntervalOnDate(tomorrow);
+      const intervalsYesterday = getIntervalOnDate(yesterday);
+      let openRightNow = false;
+      let currentInterval = null;
+      let nextInterval = null;
+      if (intervalsYesterday) {
+        for (let i = 0; i < intervalsYesterday.length; i++) {
+          const interval = intervalsYesterday[i];
+          const startIntervalNumber = timeStringToNumber(interval.start);
+          const endIntervalNumber = timeStringToNumber(interval.end);
+          // If end overflows to the next day (i.e. today).
+          if (endIntervalNumber < startIntervalNumber) {
+            if (nowTimeNumber < endIntervalNumber) {
+              currentInterval = interval;
+              openRightNow = true;
+            }
+          }
+        }
+      }
+      // Assumes no overlapping intervals
+      if (intervalsToday) {
+        for (let i = 0; i < intervalsToday.length; i++) {
+          const interval = intervalsToday[i];
+          const startIntervalNumber = timeStringToNumber(interval.start);
+          const endIntervalNumber = timeStringToNumber(interval.end);
+          // If current time doesn't belong to one of yesterdays interval.
+          if (currentInterval == null) {
+            if (endIntervalNumber < startIntervalNumber) {
+              if (nowTimeNumber >= startIntervalNumber) {
+                currentInterval = interval;
+                openRightNow = true;
+              }
+            } else if (nowTimeNumber >= startIntervalNumber
+              && nowTimeNumber < endIntervalNumber) {
+              currentInterval = interval;
+              openRightNow = true;
+            }
+          }
+          if (nextInterval == null) {
+            if (startIntervalNumber > nowTimeNumber) {
+              nextInterval = interval
+            }
+          } else {
+            if (startIntervalNumber > nowTimeNumber
+              && startIntervalNumber < timeStringToNumber(nextInterval.start)) {
+              nextInterval = interval;
+            }
+          }
+        }
+      }
+      let nextIsTomorrow = false;
+      // If no more intervals in the day
+      if (nextInterval == null) {
+        if (intervalsTomorrow) {
+          if (intervalsTomorrow.length > 0) {
+            nextInterval = intervalsTomorrow[0];
+            nextIsTomorrow = true;
+          }
+        }
+      }
+      let message = 'Closed';
+      if (openRightNow) {
+        if (currentInterval.start === "00:00" && currentInterval.end === "23:59") {
+          message = 'Open 24 Hours';
+        } else {
+          message = 'Open · Closes at [closingTime]';
+          // message = message.replace("[closingTime]", formatTime(currentInterval.end));
+          message = message.replace("[closingTime]",currentInterval.end);
+        }
+      } else if (nextInterval) {
+        if (nextIsTomorrow) {
+          message = 'Closed · Opens at [openingTime] tomorrow';
+          // message = message.replace("[openingTime]", formatTime(nextInterval.start));
+            message = message.replace("[openingTime]", nextInterval.start);
+        } else {
+          message = 'Closed · Opens at [openingTime]';
+          // message = message.replace("[openingTime]", formatTime(nextInterval.start));
+            message = message.replace("[openingTime]", nextInterval.start);
+        }
+      }
+      return message;
+    };
+</script>
+
+<script>
+
+    document.addEventListener("DOMContentLoaded", function () {
+    var baseURL = "https://liveapi-sandbox.yext.com/v2/accounts/me/entities/geosearch?";
+    var api_key = "b262ae7768eec3bfa53bfca6d48e4000";
+    var vparam = "20181017";
+    var lat = {{latitude}};
+    var lng = {{longitude}};
+    var location = lat + ", " + lng;
+    var limit = 3;
+    var radius = 500;
+    var savedFilterId ="910935477"; 
+    var entityTypes =
+        "location";
+    var fields = "name,hours,neighborhood,address,mainPhone,timeZoneUtcOffset";
+    const savedSearchIdString = "";
+    var fullURL =
+        baseURL +
+        "api_key=" +
+        api_key +
+        "&v=" +
+        vparam +
+        "&location=" +
+        location +
+        "&limit=" +
+        (limit + 1) +
+        "&radius=" +
+        radius +
+        "&entityTypes=" +
+        entityTypes +
+        "&fields=" +
+        fields +
+        "&resolvePlaceholders=true"+
+        "&savedFilterId="+
+         savedFilterId; 
+    [].slice
+        .call(document.querySelectorAll(".location-data") || [])
+        .forEach(function (el) {
+            el.innerHTML = '<div class="col">Loading...</div>';
+        });
+    //$.get(fullURL, function (data) {
+    fetch(fullURL).then(response => response.json()).then(data => {
+        //entities = data.response.entities;
+        entities = data.response.entities;
+        [].slice
+        .call(document.querySelectorAll(".location-data") || [])
+        .forEach(function (el) {
+            el.innerHTML = "";
+        });
+        if (
+        entities.length == 0 ||
+        (entities.length == 1 && entities[0].meta.id == "{{id}}")
+        ) {
+        [].slice
+            .call(document.querySelectorAll(".location-data") || [])
+            .forEach(function (el) {
+            el.innerHTML = '<div class="col">No Locations Found</div>';
+            });
+        }
+        for (var i = 1; i < entities.length; i++) {
+        location = entities[i];
+        locationHTML = "";
+        const parsedOffset = parseTimeZoneUtcOffset(location.timeZoneUtcOffset);
+        //style="width:80%;height:auto;padding-top:2rem;padding-bottom:2rem;
+        //style="width:100%;height:auto;        
+        if (true) {
+            if (location.websiteUrl) {
+            locationHTML =
+                '<div class="location grid grid-cols-1 sm:grid-cols-2 grid gap-x-2 gap-y-2 md:grid-cols-1 bg-white "><div class="grid address-cta-column px-5"><div class="name text-xl font-semibold">' +
+                location.name +
+                '</div><a class="address hover:underline" href="#"><div>' +
+                location.address.line1 +
+                '</div><div class="address-line-2">' + 
+                location.address.city + ', ' + location.address.region + ' ' + location.address.postalCode + '<br><strong>' + window.getOpenNowString(location.hours, parsedOffset) + '</strong>'
+                '</div></a></div>';
+            } else {
+            locationHTML =
+                '<div class="location grid grid-cols-1 sm:grid-cols-2 grid gap-x-2 gap-y-2 md:grid-cols-1 bg-white "><div class="address-cta-column px-5 py-5"><div class="name text-xl font-semibold">' +
+                location.name +
+                '</div><div>' +
+                location.address.line1 +
+                '</div><div class="address-line-2">' + 
+                location.address.city + ', ' + location.address.region + ' ' + location.address.postalCode + '<br><strong>' + window.getOpenNowString(location.hours, parsedOffset) + '</strong>'
+                '</div></div>';
+            }
+            //console.log(locationHTML);
+            [].slice
+            .call(document.querySelectorAll(".location-data") || [])
+            .forEach(function (el) {
+                el.innerHTML += locationHTML;
+            });
+        }
+        }
+    });
+    });
+</script>
